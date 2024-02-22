@@ -43,16 +43,6 @@ class MainActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this)[WebViewModel::class.java]
 
-        viewModel.docs.observe(this, Observer { docs ->
-            // UI 업데이트: 아이템 목록 표시
-            Log.d(TAG, docs.toString())
-        })
-
-        viewModel.imgs.observe(this, Observer { imgs ->
-            // UI 업데이트: 아이템 목록 표시
-            Log.d(TAG, imgs.toString())
-        })
-
         TabLayoutMediator(tabLayout, viewPager) { tab: TabLayout.Tab, position: Int ->
                 tab.text = ArrayList(
                     mutableListOf(
@@ -64,7 +54,7 @@ class MainActivity : AppCompatActivity() {
         .attach()
 
         buttonSearch.setOnClickListener{
-            Log.d(TAG, "hello")
+            Log.d(TAG, "hello you searched for " + editTextSearch.text.toString())
             viewModel.fetchDocs(editTextSearch.text.toString())
             viewModel.fetchImages(editTextSearch.text.toString())
         }

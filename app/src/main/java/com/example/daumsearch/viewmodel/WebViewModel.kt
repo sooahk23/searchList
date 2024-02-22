@@ -16,6 +16,7 @@ class WebViewModel : ViewModel(){
     private val TAG = "WebViewModel"
     private val _docs = MutableLiveData<ResponseDocuments>()
     val docs: LiveData<ResponseDocuments> = _docs
+//    val docs: LiveData<List<Document>> = _docs
 
     private val _imgs = MutableLiveData<ResponseImages>()
     val imgs: LiveData<ResponseImages> = _imgs
