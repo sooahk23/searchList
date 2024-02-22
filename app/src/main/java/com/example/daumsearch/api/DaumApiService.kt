@@ -1,7 +1,5 @@
 package com.example.daumsearch.api
 
-import com.example.daumsearch.data.Document
-import com.example.daumsearch.data.Image
 import com.example.daumsearch.data.ResponseDocuments
 import com.example.daumsearch.data.ResponseImages
 import retrofit2.Call

@@ -6,8 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.daumsearch.api.RetrofitClient
-import com.example.daumsearch.data.Document
-import com.example.daumsearch.data.Image
 import com.example.daumsearch.data.ResponseDocuments
 import com.example.daumsearch.data.ResponseImages
 import retrofit2.Call

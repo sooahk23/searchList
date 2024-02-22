@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Daum Search</string>
+    <string name="bookmark">북마크하여 저장하세요</string>
 </resources>
