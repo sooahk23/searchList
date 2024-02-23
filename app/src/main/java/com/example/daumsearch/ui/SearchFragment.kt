@@ -1,7 +1,6 @@
 package com.example.daumsearch.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,12 +8,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.example.daumsearch.R
-import com.example.daumsearch.data.WebMedia
 import com.example.daumsearch.databinding.SearchFragmentBinding
 import com.example.daumsearch.ui.adapter.RecyclerAdapter
 import com.example.daumsearch.viewmodel.WebViewModel
@@ -47,17 +44,10 @@ class SearchFragment: Fragment() {
 
         recyclerView.layoutManager = linearLayoutManager
         recyclerView.adapter = adapter
-        Log.d("LiveDataTest", "Current value: ${viewModel.docs}")
-        viewModel.docs.observe(viewLifecycleOwner, Observer { docs ->
-            // UI 업데이트: 아이템 목록 표시
-            Log.d(TAG, "HERE?????")
-            adapter.setData(docs)
 
-        })
-
-        viewModel.imgs.observe(viewLifecycleOwner, Observer { imgs ->
+        viewModel.webMedia.observe(viewLifecycleOwner, Observer { webMedia ->
             // UI 업데이트: 아이템 목록 표시
-//            Log.d(TAG, imgs.toString())
+            adapter.setData(webMedia)
         })
 
 

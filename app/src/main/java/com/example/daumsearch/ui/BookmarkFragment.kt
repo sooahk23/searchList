@@ -44,17 +44,10 @@ class BookmarkFragment: Fragment() {
 
         recyclerView.layoutManager = linearLayoutManager
         recyclerView.adapter = adapter
-        Log.d("LiveDataTest", "Current value: ${viewModel.docs}")
-        viewModel.docs.observe(viewLifecycleOwner, Observer { docs ->
-            // UI 업데이트: 아이템 목록 표시
-            Log.d(TAG, "HERE?????")
-            adapter.setData(docs)
 
-        })
-
-        viewModel.imgs.observe(viewLifecycleOwner, Observer { imgs ->
+        viewModel.webMedia.observe(viewLifecycleOwner, Observer { webMedia ->
             // UI 업데이트: 아이템 목록 표시
-//            Log.d(TAG, imgs.toString())
+            adapter.setData(webMedia)
         })
     }
 

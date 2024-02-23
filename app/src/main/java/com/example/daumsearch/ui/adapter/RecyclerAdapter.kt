@@ -1,19 +1,16 @@
 package com.example.daumsearch.ui.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.daumsearch.R
 import com.example.daumsearch.data.Document
 import com.example.daumsearch.data.Image
 import com.example.daumsearch.data.ViewType
-import com.example.daumsearch.data.WebMedia
+import com.example.daumsearch.data.WebMedium
 import com.example.daumsearch.databinding.RecyclerDocumentBinding
 import com.example.daumsearch.databinding.RecyclerImageBinding
 
-class RecyclerAdapter(private var items: List<WebMedia>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class RecyclerAdapter(private var items: List<WebMedium>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     class RecyclerDocHolder(binding: RecyclerDocumentBinding) : RecyclerView.ViewHolder(binding.root) {
         val binding:RecyclerDocumentBinding = binding
     }
@@ -58,7 +55,7 @@ class RecyclerAdapter(private var items: List<WebMedia>) : RecyclerView.Adapter<
     }
 
     override fun getItemViewType(position: Int): Int {
-        val item : WebMedia = items[position]
+        val item : WebMedium = items[position]
         return when (item) {
             is Document -> ViewType.Document.value
             is Image -> ViewType.Image.value
@@ -66,9 +63,8 @@ class RecyclerAdapter(private var items: List<WebMedia>) : RecyclerView.Adapter<
         }
     }
 
-    fun setData(newItems: List<WebMedia>) {
+    fun setData(newItems: List<WebMedium>) {
         this.items = newItems
-        Log.d("hellomckscdmlk", newItems.toString())
         notifyDataSetChanged()  // 데이터가 변경되었음을 어댑터에 알립니다.
     }
 

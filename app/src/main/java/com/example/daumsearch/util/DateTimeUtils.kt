@@ -14,7 +14,7 @@ object DateTimeUtils {
     fun formatIsoDateTime(dateTime: String): String {
         val inputFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss 'GMT'XXX yyyy", Locale.ENGLISH)
         // 출력 형식 정의
-        val outputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
 
         // 문자열을 Date 객체로 파싱
         val date = inputFormat.parse(dateTime)
