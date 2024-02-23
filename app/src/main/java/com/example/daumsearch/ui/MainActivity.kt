@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -26,7 +27,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapter: ViewPagerAdapter
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var viewModel: WebViewModel
+    private val viewModel by viewModels<WebViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +42,8 @@ class MainActivity : AppCompatActivity() {
         adapter = ViewPagerAdapter(this)
         viewPager.adapter = adapter
 
-        viewModel = ViewModelProvider(this)[WebViewModel::class.java]
+//        viewModel = ViewModelProvider(this)[WebViewModel::class.java]
+//        viewModel.sharedData.value = "Hello from MainActivity"
 
         TabLayoutMediator(tabLayout, viewPager) { tab: TabLayout.Tab, position: Int ->
                 tab.text = ArrayList(

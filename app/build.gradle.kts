@@ -57,4 +57,10 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0") // JSON 파싱을 위한 Gson 컨버터
     // OkHttp 로거 인터셉터
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
+
+    // ViewModel과 LiveData
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.3.1")
+    // ViewModel을 사용하기 위한 Kotlin 확장 기능
+    implementation("androidx.fragment:fragment-ktx:1.3.6")
 }

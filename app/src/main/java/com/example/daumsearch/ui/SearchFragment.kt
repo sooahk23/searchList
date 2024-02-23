@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,6 +24,7 @@ class SearchFragment: Fragment() {
 
     private var _binding: SearchFragmentBinding ? = null
     private val binding get() = _binding!!
+    private val viewModel: WebViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,7 +37,7 @@ class SearchFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val viewModel = ViewModelProvider(this)[WebViewModel::class.java]
+//        val viewModel = ViewModelProvider(parent)[WebViewModel::class.java]
         val recyclerView : RecyclerView = binding.recyclerViewAll
         val linearLayoutManager : LayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         val adapter : RecyclerAdapter = RecyclerAdapter(emptyList())
@@ -45,7 +47,7 @@ class SearchFragment: Fragment() {
 
         recyclerView.layoutManager = linearLayoutManager
         recyclerView.adapter = adapter
-
+        Log.d("LiveDataTest", "Current value: ${viewModel.docs}")
         viewModel.docs.observe(viewLifecycleOwner, Observer { docs ->
             // UI 업데이트: 아이템 목록 표시
             Log.d(TAG, "HERE?????")

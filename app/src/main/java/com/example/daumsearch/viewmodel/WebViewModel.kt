@@ -18,11 +18,11 @@ import retrofit2.Response
 
 class WebViewModel : ViewModel(){
     private val TAG = "WebViewModel"
-    private val _docs = MutableLiveData<List<Document>>()
+    private val _docs = MutableLiveData<List<Document>>(emptyList())
 //    val _docs = MutableLiveData<List<Document>>()
     val docs: LiveData<List<Document>> = _docs
 
-    private val _imgs = MutableLiveData<List<Image>>()
+    private val _imgs = MutableLiveData<List<Image>>(emptyList())
     val imgs: LiveData<List<Image>> = _imgs
 
     fun fetchDocs(query: String) {
@@ -32,7 +32,7 @@ class WebViewModel : ViewModel(){
                     val resBody : List<ResponseDocument>? = response.body()?.documents
                     val toDoc : List<Document>? = resBody?.map{item -> WebmediaResponseToWebmediaMapper.docMap(item)}
                     _docs.postValue(toDoc)
-                    Log.d(TAG, toDoc.toString())
+                    Log.d(TAG, docs.toString())
                 } else {
                     // 처리: 실패 응답
                     Log.d(TAG, "response accepted but failed in fetchDocs")
