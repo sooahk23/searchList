@@ -13,14 +13,14 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-<!--        <ImageView-->
-<!--            android:id="@+id/thumbnailImageView"-->
-<!--            android:layout_width="100dp"-->
-<!--            android:layout_height="100dp"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:src="@{image.thumbnail_url}" />-->
+        <ImageView
+            android:id="@+id/thumbnailImageView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:src="@{image.thumbnail_url}" />
 
         <TextView
             android:id="@+id/collectionTextView"
@@ -52,24 +52,16 @@
             app:layout_constraintStart_toStartOf="@+id/datetimeTextView"
             app:layout_constraintTop_toBottomOf="@+id/datetimeTextView"
             tools:text="@{image.display_sitename}" />
-<!--        <ImageView-->
-<!--            android:id="@+id/bookmarkImageView"-->
-<!--            android:layout_width="24dp"-->
-<!--            android:layout_height="24dp"-->
-<!--            android:layout_marginStart="8dp"-->
-<!--            android:contentDescription="@{image.bookmarked ? @drawable/ic_bookmarked : @drawable/ic_bookmark_border}"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:srcCompat="@drawable/ic_bookmark_border" />-->
-<!--        <ImageView-->
-<!--            android:id="@+id/bookmarkImageView"-->
-<!--            android:layout_width="24dp"-->
-<!--            android:layout_height="24dp"-->
-<!--            android:layout_marginStart="8dp"-->
-<!--            android:contentDescription="@{image.bookmarked ? @drawable/ic_bookmarked : @drawable/ic_bookmark_border}"-->
-<!--            app:layout_constraintBottom_toBottomOf="@+id/thumbnailImageView"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="@+id/thumbnailImageView"-->
-<!--            app:srcCompat="@drawable/ic_bookmark_border" />-->
+
+        <ImageView
+            android:id="@+id/bookmarkImageView"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/thumbnailImageView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/thumbnailImageView"
+            app:srcCompat="@{image.bookmarked ? @drawable/ic_bookmarked : @drawable/ic_bookmark_border}" />
 
         <TextView
             android:id="@+id/docUrlTextView"

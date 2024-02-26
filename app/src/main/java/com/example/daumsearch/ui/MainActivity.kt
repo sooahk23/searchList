@@ -42,9 +42,6 @@ class MainActivity : AppCompatActivity() {
         adapter = ViewPagerAdapter(this)
         viewPager.adapter = adapter
 
-//        viewModel = ViewModelProvider(this)[WebViewModel::class.java]
-//        viewModel.sharedData.value = "Hello from MainActivity"
-
         TabLayoutMediator(tabLayout, viewPager) { tab: TabLayout.Tab, position: Int ->
                 tab.text = ArrayList(
                     mutableListOf(

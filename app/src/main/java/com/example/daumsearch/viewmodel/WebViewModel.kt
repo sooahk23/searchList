@@ -37,8 +37,8 @@ class WebViewModel : ViewModel(){
             override fun onResponse(call: Call<ResponseDocuments>, response: Response<ResponseDocuments>) {
                 if (response.isSuccessful) {
                     _docs.postValue(response.body()?.documents)
-                    combineAll()
-                    Log.d(TAG, docs.toString())
+//                    combineAll()
+                    Log.d(TAG, response.body()?.documents.toString())
                 } else {
                     // 처리: 실패 응답
                     Log.d(TAG, "response accepted but failed in fetchDocs")
@@ -59,7 +59,7 @@ class WebViewModel : ViewModel(){
                 if (response.isSuccessful) {
                     _imgs.postValue(response.body()?.documents)
                     combineAll()
-                    Log.d(TAG, _imgs.toString())
+                    Log.d(TAG, response.body()?.documents.toString())
                 } else {
                     // 처리: 실패 응답
                     Log.d(TAG, "response accepted but failed in fetchImages")
