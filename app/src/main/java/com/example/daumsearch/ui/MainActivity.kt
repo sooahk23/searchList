@@ -54,8 +54,7 @@ class MainActivity : AppCompatActivity() {
 
         buttonSearch.setOnClickListener{
             Log.d(TAG, "hello you searched for " + editTextSearch.text.toString())
-            viewModel.fetchDocs(editTextSearch.text.toString())
-            viewModel.fetchImages(editTextSearch.text.toString())
+            viewModel.fetchAndCombineResults(editTextSearch.text.toString())
         }
 
 

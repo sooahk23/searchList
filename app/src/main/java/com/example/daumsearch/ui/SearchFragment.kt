@@ -1,6 +1,7 @@
 package com.example.daumsearch.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,6 +48,7 @@ class SearchFragment: Fragment() {
 
         viewModel.webMedia.observe(viewLifecycleOwner, Observer { webMedia ->
             // UI 업데이트: 아이템 목록 표시
+            Log.d(TAG, webMedia.toString())
             adapter.setData(webMedia)
         })
 

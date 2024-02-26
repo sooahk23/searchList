@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
+import androidx.lifecycle.viewModelScope
 import com.example.daumsearch.api.RetrofitClient
 import com.example.daumsearch.data.Document
 import com.example.daumsearch.data.Image
@@ -15,77 +16,53 @@ import com.example.daumsearch.data.ResponseImage
 import com.example.daumsearch.data.ResponseImages
 import com.example.daumsearch.data.ResponseWebMedium
 import com.example.daumsearch.data.WebMedium
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.launch
 import okhttp3.internal.ignoreIoExceptions
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import retrofit2.awaitResponse
 
 class WebViewModel : ViewModel(){
     private val TAG = "WebViewModel"
 
-    private val _docs = MutableLiveData<List<ResponseDocument>>(emptyList())
-    val docs: LiveData<List<ResponseDocument>> = _docs
-
-    private val _imgs = MutableLiveData<List<ResponseImage>>(emptyList())
-    val imgs: LiveData<List<ResponseImage>> = _imgs
-
     private val _webMedia = MutableLiveData<List<WebMedium>>(emptyList())
     val webMedia: LiveData<List<WebMedium>> = _webMedia
 
-    fun fetchDocs(query: String) {
-        RetrofitClient.daumApiService.getDocuments(query, "recency").enqueue(object : Callback<ResponseDocuments> {
-            override fun onResponse(call: Call<ResponseDocuments>, response: Response<ResponseDocuments>) {
-                if (response.isSuccessful) {
-                    _docs.postValue(response.body()?.documents)
-//                    combineAll()
-                    Log.d(TAG, response.body()?.documents.toString())
-                } else {
-                    // 처리: 실패 응답
-                    Log.d(TAG, "response accepted but failed in fetchDocs")
-                }
-            }
+    fun fetchAndCombineResults(query: String) {
+        viewModelScope.launch {
+            try {
+                val docsDeferred = async { RetrofitClient.daumApiService.getDocuments(query, "recency") }
+                val imgsDeferred = async { RetrofitClient.daumApiService.getImages(query, "recency") }
 
-            override fun onFailure(call: Call<ResponseDocuments>, t: Throwable) {
-                // 처리: 네트워크 오류
+                val docsRes = docsDeferred.await()
+                val imgsRes = imgsDeferred.await()
+
+                if (docsRes.isSuccessful && imgsRes.isSuccessful) {
+                    val docs:List<ResponseWebMedium> = docsRes.body()?.documents ?: emptyList()
+                    val imgs:List<ResponseWebMedium> = imgsRes.body()?.documents ?: emptyList()
+
+                    var combinedList: List<ResponseWebMedium> = docs + imgs
+                    combinedList = combinedList.sortedByDescending { item -> item.datetime }
+                    val combinedWebMedia: List<WebMedium> = combinedList.map{item->
+                        when(item){
+                            is ResponseDocument -> WebmediaResponseToWebmediaMapper.docMap(item)
+                            is ResponseImage -> WebmediaResponseToWebmediaMapper.ImgMap(item)
+                            else -> throw IllegalArgumentException("Invalid Response type")
+                        }
+                    }
+                    _webMedia.postValue(combinedWebMedia)
+                } else {
+                    // 오류 처리
+                    Log.d(TAG, "response accepted but failed")
+                }
+            } catch (e: Exception) {
+                // 예외 처리, 예를 들면 네트워크 오류 등
                 Log.d(TAG, "response failed in fetchDocs")
-                Log.d(TAG, t.toString())
-            }
-        })
-    }
-
-    fun fetchImages(query: String) {
-        RetrofitClient.daumApiService.getImages(query, "recency").enqueue(object : Callback<ResponseImages> {
-            override fun onResponse(call: Call<ResponseImages>, response: Response<ResponseImages>) {
-                if (response.isSuccessful) {
-                    _imgs.postValue(response.body()?.documents)
-                    combineAll()
-                    Log.d(TAG, response.body()?.documents.toString())
-                } else {
-                    // 처리: 실패 응답
-                    Log.d(TAG, "response accepted but failed in fetchImages")
-                }
-            }
-
-            override fun onFailure(call: Call<ResponseImages>, t: Throwable) {
-                // 처리: 네트워크 오류
-                Log.d(TAG, "response failed in fetchImages")
-                Log.d(TAG, t.toString())
-            }
-        })
-    }
-
-    fun combineAll() {
-        val docsList: List<ResponseWebMedium> = docs.value?: emptyList()
-        val imgsList: List<ResponseWebMedium> = imgs.value ?: emptyList()
-        var combinedList: List<ResponseWebMedium> = docsList + imgsList
-        combinedList = combinedList.sortedByDescending { item -> item.datetime }
-        val combinedWebMedia: List<WebMedium> = combinedList.map{item->
-            when(item){
-                is ResponseDocument -> WebmediaResponseToWebmediaMapper.docMap(item)
-                is ResponseImage -> WebmediaResponseToWebmediaMapper.ImgMap(item)
-                else -> throw IllegalArgumentException("Invalid Response type")
+                Log.d(TAG, e.toString())
             }
         }
-        _webMedia.postValue(combinedWebMedia)
     }
 }
