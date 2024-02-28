@@ -1,6 +1,7 @@
 package com.example.daumsearch.ui.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.daumsearch.data.Document
@@ -10,7 +11,10 @@ import com.example.daumsearch.data.WebMedium
 import com.example.daumsearch.databinding.RecyclerDocumentBinding
 import com.example.daumsearch.databinding.RecyclerImageBinding
 
-class RecyclerAdapter(private var items: List<WebMedium>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class RecyclerAdapter(private val clickListener: (item: WebMedium) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private var items: List<WebMedium> = emptyList()
+
     class RecyclerDocHolder(binding: RecyclerDocumentBinding) : RecyclerView.ViewHolder(binding.root) {
         val binding:RecyclerDocumentBinding = binding
     }
@@ -18,7 +22,6 @@ class RecyclerAdapter(private var items: List<WebMedium>) : RecyclerView.Adapter
     class RecyclerImgHolder(binding: RecyclerImageBinding) : RecyclerView.ViewHolder(binding.root) {
         val binding:RecyclerImageBinding = binding
     }
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -42,14 +45,14 @@ class RecyclerAdapter(private var items: List<WebMedium>) : RecyclerView.Adapter
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is RecyclerDocHolder -> {
-                val item = items[position] as Document // 데이터 타입 캐스팅
-                holder.binding.document = item // 데이터 바인딩
-                holder.binding.executePendingBindings() // 즉시 바인딩 실행
+                val item = items[position] as Document
+                holder.binding.document = item
+                holder.binding.docBookmark.setOnClickListener{clickListener(item)}
             }
             is RecyclerImgHolder -> {
-                val item = items[position] as Image // 데이터 타입 캐스팅
-                holder.binding.image = item // 데이터 바인딩
-                holder.binding.executePendingBindings() // 즉시 바인딩 실행
+                val item = items[position] as Image
+                holder.binding.image = item
+                holder.binding.imgbookmark.setOnClickListener{clickListener(item)}
             }
         }
     }
@@ -65,7 +68,7 @@ class RecyclerAdapter(private var items: List<WebMedium>) : RecyclerView.Adapter
 
     fun setData(newItems: List<WebMedium>) {
         this.items = newItems
-        notifyDataSetChanged()  // 데이터가 변경되었음을 어댑터에 알립니다.
+        notifyDataSetChanged()
     }
 
 }

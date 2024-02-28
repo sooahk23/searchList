@@ -30,7 +30,7 @@
             android:textSize="14sp"
             app:layout_constraintStart_toEndOf="@+id/thumbnailImageView"
             app:layout_constraintTop_toTopOf="@+id/thumbnailImageView"
-            app:layout_constraintEnd_toStartOf="@+id/bookmarkImageView"
+            app:layout_constraintEnd_toStartOf="@+id/imgbookmark"
             tools:text="@{image.collection}" />
 
         <TextView
@@ -54,7 +54,7 @@
             tools:text="@{image.display_sitename}" />
 
         <ImageView
-            android:id="@+id/bookmarkImageView"
+            android:id="@+id/imgbookmark"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginStart="8dp"

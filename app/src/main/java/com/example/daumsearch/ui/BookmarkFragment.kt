@@ -1,7 +1,6 @@
 package com.example.daumsearch.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,13 +8,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.daumsearch.R
-import com.example.daumsearch.data.TabName
 import com.example.daumsearch.databinding.BookmarkFragmentBinding
 import com.example.daumsearch.ui.adapter.RecyclerAdapter
+import com.example.daumsearch.viewmodel.BookmarkViewModel
 import com.example.daumsearch.viewmodel.WebViewModel
 
 class BookmarkFragment: Fragment() {
@@ -24,6 +22,8 @@ class BookmarkFragment: Fragment() {
     private var _binding: BookmarkFragmentBinding  ? = null
     private val binding get() = _binding!!
     private val viewModel: WebViewModel by activityViewModels()
+    private val bookmarkViewModel: BookmarkViewModel by activityViewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -35,19 +35,21 @@ class BookmarkFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recyclerView : RecyclerView = binding.recyclerViewBookmark
         val linearLayoutManager : RecyclerView.LayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        val adapter : RecyclerAdapter = RecyclerAdapter(emptyList())
+        val adapter = RecyclerAdapter(clickListener = {item ->
+            bookmarkViewModel.addOrDeleteBookmark(item)
+            // code to apply bookmarked status
+        })
+        //
 
-        binding.lifecycleOwner = viewLifecycleOwner  // 중요: LiveData를 사용할 때
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.webViewModel = viewModel
 
-        recyclerView.layoutManager = linearLayoutManager
-        recyclerView.adapter = adapter
+        binding.recyclerViewBookmark.layoutManager = linearLayoutManager
+        binding.recyclerViewBookmark.adapter = adapter
 
         viewModel.webMedia.observe(viewLifecycleOwner, Observer { webMedia ->
-            // UI 업데이트: 아이템 목록 표시
-            adapter.setData(webMedia)
+            adapter.setData(webMedia.filter { item -> item.bookmarked } )
         })
     }
 

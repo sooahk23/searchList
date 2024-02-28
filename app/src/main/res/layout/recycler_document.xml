@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
         <ImageView
-            android:id="@+id/imageViewBookmark"
+            android:id="@+id/docBookmark"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginEnd="8dp"
@@ -29,7 +29,7 @@
             android:layout_marginTop="8dp"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@id/imageViewBookmark"
+            app:layout_constraintEnd_toStartOf="@id/docBookmark"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="@{document.title}" />
@@ -39,7 +39,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            app:layout_constraintEnd_toStartOf="@id/imageViewBookmark"
+            app:layout_constraintEnd_toStartOf="@id/docBookmark"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/docTitle"
             tools:text="@{document.datetime}" />
@@ -49,7 +49,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toStartOf="@id/imageViewBookmark"
+            app:layout_constraintEnd_toStartOf="@id/docBookmark"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/docDateTime"
             tools:text="@{document.contents}"
@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textColor="@android:color/holo_blue_light"
-            app:layout_constraintEnd_toStartOf="@id/imageViewBookmark"
+            app:layout_constraintEnd_toStartOf="@id/docBookmark"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/docContents"
             tools:text="@{document.url}"/>

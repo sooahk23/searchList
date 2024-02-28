@@ -10,11 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.example.daumsearch.R
 import com.example.daumsearch.databinding.SearchFragmentBinding
 import com.example.daumsearch.ui.adapter.RecyclerAdapter
+import com.example.daumsearch.viewmodel.BookmarkViewModel
 import com.example.daumsearch.viewmodel.WebViewModel
 
 class SearchFragment: Fragment() {
@@ -23,6 +23,7 @@ class SearchFragment: Fragment() {
     private var _binding: SearchFragmentBinding ? = null
     private val binding get() = _binding!!
     private val viewModel: WebViewModel by activityViewModels()
+    private val bookmarkViewModel: BookmarkViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,19 +36,16 @@ class SearchFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        val viewModel = ViewModelProvider(parent)[WebViewModel::class.java]
-        val recyclerView : RecyclerView = binding.recyclerViewAll
         val linearLayoutManager : LayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        val adapter : RecyclerAdapter = RecyclerAdapter(emptyList())
+        val adapter = RecyclerAdapter(clickListener = {item -> bookmarkViewModel.addOrDeleteBookmark(item)})
 
-        binding.lifecycleOwner = viewLifecycleOwner  // 중요: LiveData를 사용할 때
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.webViewModel = viewModel
 
-        recyclerView.layoutManager = linearLayoutManager
-        recyclerView.adapter = adapter
+        binding.recyclerViewAll.layoutManager = linearLayoutManager
+        binding.recyclerViewAll.adapter = adapter
 
         viewModel.webMedia.observe(viewLifecycleOwner, Observer { webMedia ->
-            // UI 업데이트: 아이템 목록 표시
             Log.d(TAG, webMedia.toString())
             adapter.setData(webMedia)
         })

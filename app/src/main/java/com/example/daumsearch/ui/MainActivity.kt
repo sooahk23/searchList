@@ -7,13 +7,12 @@ import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.example.daumsearch.R
 import com.example.daumsearch.data.TabName
 import com.example.daumsearch.databinding.ActivityMainBinding
 import com.example.daumsearch.ui.adapter.ViewPagerAdapter
+import com.example.daumsearch.viewmodel.BookmarkViewModel
 import com.example.daumsearch.viewmodel.WebViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -28,6 +27,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel by viewModels<WebViewModel>()
+    private val bookmarkViewModel by viewModels<BookmarkViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,8 +56,6 @@ class MainActivity : AppCompatActivity() {
             Log.d(TAG, "hello you searched for " + editTextSearch.text.toString())
             viewModel.fetchAndCombineResults(editTextSearch.text.toString())
         }
-
-
     }
 
 }
