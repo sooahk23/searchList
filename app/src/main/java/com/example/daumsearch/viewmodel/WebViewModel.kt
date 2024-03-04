@@ -40,7 +40,7 @@ class WebViewModel (application: Application) : AndroidViewModel(application){
     val webMedia: LiveData<List<WebMedium>> = _webMedia
 
     private val db = DaumSearchApp.getDatabase(application)
-    private val bookmarkDao: BookmarkDao = db. bookmarkDao()
+    private val bookmarkDao: BookmarkDao = db.bookmarkDao()
 
     fun fetchAndCombineResults(query: String) {
         viewModelScope.launch {
@@ -114,13 +114,10 @@ class WebViewModel (application: Application) : AndroidViewModel(application){
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val webMedia: List<WebMedium>? = _webMedia.value
-                // webMedia가 null이 아니고 webMedia에 webMedium이 존재하면
-                // webMedia의 bookmarked를 webMedium의 bookmarked로 바꾸고
-                // webMedia를 다시 _webMedia에 넣어준다.
-                webMedium.bookmarked = !webMedium.bookmarked
+                webMedium.bookmarked = !webMedium.bookmarked // 원래 있는지 확인하기 위해 Flag를 뒤집음
                 if (webMedia != null && webMedia.contains(webMedium)) {
                     val index = webMedia.indexOf(webMedium)
-                    webMedia[index].bookmarked = !webMedium.bookmarked
+                    webMedia[index].bookmarked = !webMedium.bookmarked // 다시 Flag를 원래대로 적용
                     _webMedia.postValue(webMedia?: emptyList())
                 }
             }

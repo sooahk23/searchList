@@ -8,11 +8,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.daumsearch.DaumSearchApp
+import com.example.daumsearch.data.Document
+import com.example.daumsearch.data.Image
+import com.example.daumsearch.data.ResponseDocument
+import com.example.daumsearch.data.ResponseImage
 
 import com.example.daumsearch.data.WebMedium
 import com.example.daumsearch.db.Bookmark
 import com.example.daumsearch.db.BookmarkDao
 import com.example.daumsearch.db.Converters
+import com.example.daumsearch.util.DateTimeUtils
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -26,7 +31,7 @@ class BookmarkViewModel(application: Application) : AndroidViewModel(application
     val bookmarks: LiveData<List<Bookmark>> =_bookmarks
 
     private val db = DaumSearchApp.getDatabase(application)
-    private val bookmarkDao: BookmarkDao = db. bookmarkDao()
+    private val bookmarkDao: BookmarkDao = db.bookmarkDao()
 
 //    fun addBookmark(webMedium: WebMedium) {
 //        viewModelScope.launch {
@@ -56,15 +61,50 @@ class BookmarkViewModel(application: Application) : AndroidViewModel(application
     fun addOrDeleteBookmark(webMedium: WebMedium) {
         viewModelScope.launch {
             withContext(Dispatchers.IO){
-                val existingBookmark = bookmarkDao.findBookmarkByContent(Gson().toJson(webMedium))
-                if (existingBookmark != null) {
-                    bookmarkDao.deleteBookmark(existingBookmark)
-                } else {
-                    bookmarkDao.insertBookmark(Bookmark(content = webMedium))
+                val existingBookmark: Bookmark?
+                when(webMedium){
+                    is Document -> {
+                        existingBookmark = bookmarkDao.findBookmarkByContent(
+                            Gson().toJson(
+                                Document(
+                                    webMedium.title, webMedium.contents, webMedium.url,
+                                    webMedium.datetime,
+                                    true
+                                )
+                            ))
+                        if (existingBookmark != null) {
+                            Log.d(TAG, "deleting bookmark")
+                            bookmarkDao.deleteBookmark(existingBookmark)
+                        } else {
+                            bookmarkDao.insertBookmark(Bookmark(content = webMedium))
+                        }
+                    }
+                    is Image -> {
+                        existingBookmark = bookmarkDao.findBookmarkByContent(
+                            Gson().toJson(
+                                Image(
+                                    webMedium.collection,
+                                    webMedium.thumbnail_url,
+                                    webMedium.image_url,
+                                    webMedium.width,
+                                    webMedium.height,
+                                    webMedium.display_sitename,
+                                    webMedium.doc_url,
+                                    webMedium.datetime,
+                                    true
+                                )
+                            )
+                        )
+                        if (existingBookmark != null) {
+                            Log.d(TAG, "deleting bookmark")
+                            bookmarkDao.deleteBookmark(existingBookmark)
+                        } else {
+                            bookmarkDao.insertBookmark(Bookmark(content = webMedium))
+                        }
+                    }
                 }
                 // 이걸 항상 부르는 게 맞나?
                 _bookmarks.postValue(bookmarkDao.getAllBookmarks())
-
             }
         }
     }
