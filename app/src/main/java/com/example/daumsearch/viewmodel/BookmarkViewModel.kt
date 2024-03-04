@@ -64,6 +64,7 @@ class BookmarkViewModel(application: Application) : AndroidViewModel(application
                 }
                 // 이걸 항상 부르는 게 맞나?
                 _bookmarks.postValue(bookmarkDao.getAllBookmarks())
+
             }
         }
     }

@@ -45,6 +45,7 @@ class WebViewModel (application: Application) : AndroidViewModel(application){
     fun fetchAndCombineResults(query: String) {
         viewModelScope.launch {
             withContext(Dispatchers.IO){
+//                bookmarkDao.deleteAll()
                 try {
                     val docsDeferred = async { RetrofitClient.daumApiService.getDocuments(query, "recency") }
                     val imgsDeferred = async { RetrofitClient.daumApiService.getImages(query, "recency") }
@@ -63,7 +64,9 @@ class WebViewModel (application: Application) : AndroidViewModel(application){
                                 is ResponseDocument -> {
                                     val existingBookmark = bookmarkDao.findBookmarkByContent(
                                         Gson().toJson(Document(
-                                        item.title ?: "", item.contents ?: "", item.url ?: "", item.datetime.toString(), true
+                                        item.title ?: "", item.contents ?: "", item.url ?: "",
+                                            datetime = DateTimeUtils.formatIsoDateTime(item.datetime.toString()),
+                                            true
                                     )))
                                     WebmediaResponseToWebmediaMapper.docMap(existingBookmark!=null, item)
                                 }
@@ -91,6 +94,8 @@ class WebViewModel (application: Application) : AndroidViewModel(application){
                                 else -> throw IllegalArgumentException("Invalid Response type")
                             }
                         }
+                        val toPrint = combinedWebMedia.filter { it.bookmarked }
+                        Log.d(TAG, "combinedWebMedia: $toPrint")
                         _webMedia.postValue(combinedWebMedia)
                     } else {
                         // 오류 처리
@@ -100,6 +105,23 @@ class WebViewModel (application: Application) : AndroidViewModel(application){
                     // 예외 처리, 예를 들면 네트워크 오류 등
                     Log.d(TAG, "response failed in fetchDocs")
                     Log.d(TAG, e.toString())
+                }
+            }
+        }
+    }
+
+    fun addOrDeleteBookmark(webMedium: WebMedium) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val webMedia: List<WebMedium>? = _webMedia.value
+                // webMedia가 null이 아니고 webMedia에 webMedium이 존재하면
+                // webMedia의 bookmarked를 webMedium의 bookmarked로 바꾸고
+                // webMedia를 다시 _webMedia에 넣어준다.
+                webMedium.bookmarked = !webMedium.bookmarked
+                if (webMedia != null && webMedia.contains(webMedium)) {
+                    val index = webMedia.indexOf(webMedium)
+                    webMedia[index].bookmarked = !webMedium.bookmarked
+                    _webMedia.postValue(webMedia?: emptyList())
                 }
             }
         }

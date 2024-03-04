@@ -24,4 +24,8 @@ interface BookmarkDao {
     @Delete
     suspend fun deleteBookmark(bookmark: Bookmark)
 
+    @Query("DELETE FROM bookmarks")
+    suspend fun deleteAll()
+
 }
+

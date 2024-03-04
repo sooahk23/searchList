@@ -37,10 +37,10 @@ class BookmarkFragment: Fragment() {
 
         val linearLayoutManager : RecyclerView.LayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         val adapter = RecyclerAdapter(clickListener = {item ->
+            item.bookmarked = !item.bookmarked
             bookmarkViewModel.addOrDeleteBookmark(item)
-            // code to apply bookmarked status
+            viewModel.addOrDeleteBookmark(item)
         })
-        //
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.webViewModel = viewModel

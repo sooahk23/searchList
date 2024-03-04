@@ -37,7 +37,11 @@ class SearchFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val linearLayoutManager : LayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        val adapter = RecyclerAdapter(clickListener = {item -> bookmarkViewModel.addOrDeleteBookmark(item)})
+        val adapter = RecyclerAdapter(clickListener = {item ->
+            item.bookmarked = !item.bookmarked
+            bookmarkViewModel.addOrDeleteBookmark(item)
+            viewModel.addOrDeleteBookmark(item)
+        })
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.webViewModel = viewModel

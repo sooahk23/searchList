@@ -1,5 +1,6 @@
 package com.example.daumsearch.db
 
+import android.util.Log
 import androidx.room.TypeConverter
 import com.example.daumsearch.data.Document
 import com.example.daumsearch.data.Image
@@ -14,16 +15,17 @@ class Converters {
 
     @TypeConverter
     fun fromJsonToWebMedium(value: String): WebMedium {
-        val type = JsonParser.parseString(value).asJsonObject.get("type").asInt
+        val type = JsonParser.parseString(value).asJsonObject.get("type").asString
+        Log.d("Converters", "type: $type")
         return when (type) {
-            ViewType.Document.value -> Gson().fromJson(value, Document::class.java)
-            ViewType.Image.value -> Gson().fromJson(value, Image::class.java)
+            "Document" -> Gson().fromJson(value, Document::class.java)
+            "Image" -> Gson().fromJson(value, Image::class.java)
             else -> throw IllegalArgumentException("Unknown type")
         }
     }
 
     @TypeConverter
-    fun fromViewTypeToJson(value: ViewType): String = Gson().toJson(value.value)
+    fun fromViewTypeToJson(value: ViewType): String = Gson().toJson(value.value.toString())
 
     @TypeConverter
     fun fromJsonToViewType(value: String): ViewType  {
