@@ -52,41 +52,46 @@ class WebViewModel (application: Application) : AndroidViewModel(application){
         viewModelScope.launch {
             withContext(Dispatchers.IO){
                 try {
-                        val docsDeferred = async { RetrofitClient.daumApiService.getDocuments(query ?: queryBefore, "recency", docsPage) }
-                        val imgsDeferred = async { RetrofitClient.daumApiService.getImages(query?: queryBefore, "recency", imgsPage) }
+//                    Log.d(TAG, "docsPage: $docsPage, imgsPage: $imgsPage")
+                    val docsDeferred = async { RetrofitClient.daumApiService.getDocuments(query ?: queryBefore, "recency", docsPage) }
+                    val imgsDeferred = async { RetrofitClient.daumApiService.getImages(query?: queryBefore, "recency", imgsPage) }
 
-                        val docsRes = docsDeferred.await()
-                        val imgsRes = imgsDeferred.await()
+                    val docsRes = docsDeferred.await()
+                    val imgsRes = imgsDeferred.await()
 
-                        if (docsRes.isSuccessful && imgsRes.isSuccessful) {
-                            val docs:List<ResponseWebMedium> = docsRes.body()?.documents ?: emptyList()
-                            val imgs:List<ResponseWebMedium> = imgsRes.body()?.documents ?: emptyList()
+                    if (docsRes.isSuccessful && imgsRes.isSuccessful) {
+                        val docs:List<ResponseWebMedium> = docsRes.body()?.documents ?: emptyList()
+                        val imgs:List<ResponseWebMedium> = imgsRes.body()?.documents ?: emptyList()
 
-                            var combinedList: List<ResponseWebMedium> = docs + imgs
-                            combinedList = combinedList.sortedByDescending { item -> item.datetime }
+                        var combinedList: List<ResponseWebMedium> = docs + imgs
+                        combinedList = combinedList.sortedByDescending { item -> item.datetime }
 
-                            val combinedWebMedia: List<WebMedium> = combinedList.map{item->
-                                when(item){
-                                    is ResponseDocument -> {
-                                        val existingBookmark = bookmarkDao.findBookmarkByContent(
-                                            Gson().toJson(docMap(true, item)))
-                                        docMap(existingBookmark != null, item)
-                                    }
-                                    is ResponseImage -> {
-                                        val existingBookmark = bookmarkDao.findBookmarkByContent(
-                                            Gson().toJson(ImgMap(true, item)))
-                                        ImgMap(existingBookmark != null, item)
-                                    }
-                                    else -> throw IllegalArgumentException("Invalid Response type")
+                        val combinedWebMedia: List<WebMedium> = combinedList.map{item->
+                            when(item){
+                                is ResponseDocument -> {
+                                    val existingBookmark = bookmarkDao.findBookmarkByContent(
+                                        Gson().toJson(docMap(true, item)))
+                                    docMap(existingBookmark != null, item)
                                 }
+                                is ResponseImage -> {
+                                    val existingBookmark = bookmarkDao.findBookmarkByContent(
+                                        Gson().toJson(ImgMap(true, item)))
+                                    ImgMap(existingBookmark != null, item)
+                                }
+                                else -> throw IllegalArgumentException("Invalid Response type")
                             }
-                            _webMedia.postValue(webMedia.value?.plus(combinedWebMedia))
-                            if(query!=null) queryBefore = query
-                            docsPage++
-                            imgsPage++
-                        } else {
-                            Log.d(TAG, "response accepted but failed")
                         }
+//                        _webMedia.postValue(webMedia.value?.plus(combinedWebMedia))
+                        val webMediaSet = LinkedHashSet(webMedia.value ?: emptyList())
+                        webMediaSet.addAll(combinedWebMedia)
+                        _webMedia.postValue(webMediaSet.toList())
+
+                        if(query!=null) queryBefore = query
+                        docsPage++
+                        imgsPage++
+                    } else {
+                        Log.d(TAG, "response accepted but failed - Maybe no more data")
+                    }
                 } catch (e: Exception) {
                     // 예외 처리, 예를 들면 네트워크 오류 등
                     Log.d(TAG, "response failed in fetchDocs")
