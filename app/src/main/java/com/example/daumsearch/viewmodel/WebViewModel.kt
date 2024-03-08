@@ -70,14 +70,12 @@ class WebViewModel (application: Application) : AndroidViewModel(application){
                                     is ResponseDocument -> {
                                         val existingBookmark = bookmarkDao.findBookmarkByContent(
                                             Gson().toJson(docMap(true, item)))
-                                        WebmediaResponseToWebmediaMapper.docMap(
-                                            existingBookmark != null, item)
+                                        docMap(existingBookmark != null, item)
                                     }
                                     is ResponseImage -> {
                                         val existingBookmark = bookmarkDao.findBookmarkByContent(
                                             Gson().toJson(ImgMap(true, item)))
-                                        WebmediaResponseToWebmediaMapper.ImgMap(
-                                            existingBookmark != null, item)
+                                        ImgMap(existingBookmark != null, item)
                                     }
                                     else -> throw IllegalArgumentException("Invalid Response type")
                                 }
