@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.example.daumsearch.R
 import com.example.daumsearch.databinding.SearchFragmentBinding
@@ -36,7 +37,7 @@ class SearchFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val linearLayoutManager : LayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         val adapter = RecyclerAdapter(clickListener = {item ->
             item.bookmarked = !item.bookmarked
             bookmarkViewModel.addOrDeleteBookmark(item)
@@ -48,6 +49,21 @@ class SearchFragment: Fragment() {
 
         binding.recyclerViewAll.layoutManager = linearLayoutManager
         binding.recyclerViewAll.adapter = adapter
+
+        binding.recyclerViewAll.addOnScrollListener( object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val totalItemCount = linearLayoutManager.itemCount
+                val lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition()
+
+//                if (lastVisibleItemPosition + 5 >= totalItemCount && !isLoading) {
+                if (lastVisibleItemPosition + 5 >= totalItemCount) {
+                    // 여기서 데이터 로드 (예: API 호출)
+                    viewModel.fetchAndCombineResults(null)
+                }
+            }
+        })
 
         viewModel.webMedia.observe(viewLifecycleOwner, Observer { webMedia ->
             Log.d(TAG, webMedia.toString())

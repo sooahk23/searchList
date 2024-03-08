@@ -12,12 +12,18 @@ interface DaumApiService {
     @Headers("Authorization: KakaoAK 206547b0f9d8a16a8775ee3a6cfd9cd0")
     @GET("web")
     suspend fun getDocuments(@Query("query") query: String,
-                     @Query("sort") sort: String
+                     @Query("sort") sort: String,
+                             @Query("page") page: Int = 1,
+                             @Query("size") size: Int = 20
     ): Response<ResponseDocuments>
 
     @Headers("Authorization: KakaoAK 206547b0f9d8a16a8775ee3a6cfd9cd0")
     @GET("image")
     suspend fun getImages(@Query("query") query: String,
-                     @Query("sort") sort: String
+                     @Query("sort") sort: String,
+                          @Query("page") page: Int = 1,
+                          @Query("size") size: Int = 20
     ): Response<ResponseImages>
 }
+
+
