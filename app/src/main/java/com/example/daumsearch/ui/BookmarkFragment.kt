@@ -43,13 +43,14 @@ class BookmarkFragment: Fragment() {
         })
 
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.webViewModel = viewModel
+        binding.bookmarkViewModel = bookmarkViewModel
 
         binding.recyclerViewBookmark.layoutManager = linearLayoutManager
         binding.recyclerViewBookmark.adapter = adapter
 
-        viewModel.webMedia.observe(viewLifecycleOwner, Observer { webMedia ->
-            adapter.setData(webMedia.filter { item -> item.bookmarked } )
+        bookmarkViewModel.fetchBookmarks()
+        bookmarkViewModel.bookmarks.observe(viewLifecycleOwner, Observer { bookmarks ->
+            adapter.setData(bookmarks.map { it.content }.filter { it.bookmarked })
         })
     }
 

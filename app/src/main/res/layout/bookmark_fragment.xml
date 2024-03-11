@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
-            name="webViewModel"
-            type="com.example.daumsearch.viewmodel.WebViewModel" />
+            name="bookmarkViewModel"
+            type="com.example.daumsearch.viewmodel.BookmarkViewModel" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
