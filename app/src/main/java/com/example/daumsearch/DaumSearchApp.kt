@@ -24,6 +24,10 @@ class DaumSearchApp : Application() {
         }
     }
 
+    fun getDatabase(): AppDatabase {
+        return INSTANCE?: throw IllegalStateException("Database not initialized")
+    }
+
     override fun onCreate() {
         super.onCreate()
     }

@@ -15,4 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Daum Search"
 include(":app")
- 
+include(":app:bookmarkviewer")
