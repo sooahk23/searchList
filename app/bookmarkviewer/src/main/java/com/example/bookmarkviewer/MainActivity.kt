@@ -46,12 +46,15 @@ class MainActivity : AppCompatActivity() {
                 cursor?.let {
                     Log.d("Cursor", "cursor: $cursor")
                     while (it.moveToNext()) {
+                        val content = it.getString(it.getColumnIndex("content"))
+                        // From json I want to get type column
 
-                        val json = it.getString(it.getColumnIndex("content"))
-                        Log.d("Cursor", "json: $json")
-                        val webMedium: WebMedium = Gson().fromJson(json, WebMedium::class.java)
-                        webMediaList.add(webMedium)
-                        Log.d("MainActivity", "webMedium: $webMedium")
+//                        when (content.get("type")) {
+//
+//                        }
+//                        val webMedium: WebMedium = Gson().fromJson(json, WebMedium::class.java)
+//                        webMediaList.add(webMedium)
+//                        Log.d("MainActivity", "webMedium: $webMedium")
                     }
                     it.close()
                 }

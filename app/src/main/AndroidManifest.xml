@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET" />
+    <permission android:name="com.example.daumsearch.bookmarkprovider.READ" android:protectionLevel="normal" />
     <application
         android:name=".DaumSearchApp"
         android:allowBackup="true"
