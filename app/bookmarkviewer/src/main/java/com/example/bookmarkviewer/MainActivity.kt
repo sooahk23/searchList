@@ -17,6 +17,7 @@ import com.example.bookmarkviewer.data.WebMedium
 import com.google.gson.Gson
 
 import com.example.bookmarkviewer.databinding.ActivityMainBinding
+import org.json.JSONObject
 
 
 class MainActivity : AppCompatActivity() {
@@ -47,23 +48,30 @@ class MainActivity : AppCompatActivity() {
                     Log.d("Cursor", "cursor: $cursor")
                     while (it.moveToNext()) {
                         val content = it.getString(it.getColumnIndex("content"))
-                        // From json I want to get type column
-
-//                        when (content.get("type")) {
-//
-//                        }
-//                        val webMedium: WebMedium = Gson().fromJson(json, WebMedium::class.java)
-//                        webMediaList.add(webMedium)
-//                        Log.d("MainActivity", "webMedium: $webMedium")
+                        val jsonContent = JSONObject(content)
+                        val type = jsonContent.getString("type")
+                        Log.d("MainActivity", "jsonContent type: $type" )
+                        when (jsonContent.getString("type")) {
+                            "Document" -> {
+                                val document: Document = Gson().fromJson(jsonContent.toString(), Document::class.java)
+                                webMediaList.add(document)
+                                Log.d("MainActivity", "document: $document")
+                            }
+                            "Image" -> {
+                                val image: Image = Gson().fromJson(jsonContent.toString(), Image::class.java)
+                                webMediaList.add(image)
+                                Log.d("MainActivity", "image: $image")
+                            }
+                        }
                     }
                     it.close()
+                    adapter.setData(webMediaList)
+                    adapter.notifyDataSetChanged()
                 }
+
             } catch (e: Exception) {
                 Log.d("MainActivity", "error: $e")
             }
-
-//            adapter.setData(webMediaList)
-//            adapter.notifyDataSetChanged()
         })
     }
 
